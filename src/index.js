@@ -29,7 +29,6 @@ client.on('message', async message => {
   if(message.content.startsWith(prefix + 'ayuda')) {
     let usuario = message.guild.roles.cache.find((r) => r.id === "850867693342425098");
   
-    if (message.member.roles.cache.has(usuario.id)) {
   
       let helpembeduser = new Discord.MessageEmbed()
       .setTitle('**Chicago Minecraft | Comandos**')
@@ -37,7 +36,7 @@ client.on('message', async message => {
       .addField('**__Generales__**', "`sugerencia`, `ip`, `reportar`, `dado`, `pregunta`", true)
       .setColor("RED")
       message.channel.send(helpembeduser);
-      }
+      
     }
 
 /////////////////////////////////////////////////  ||  Sug/bugs  ||  /////////////////////////////////////////////////
@@ -112,7 +111,18 @@ if (message.content.startsWith(prefix + 'sugerencia')) {
   }
 
   /////////////////////////////////////////////////  ||  Anuncio/Encuesta  ||  /////////////////////////////////////////////////
-
+  if(message.content.startsWith(`${prefix}help`)){
+    if(args[1] == 'sugerencias'){
+      var channel = message.mentions.channels.first()
+      var suggest = '828561407569690634'
+      if(!channel) return message.channel.send(`${message.author} debes mencionar el canal`)
+      var embed = new Discord.MessageEmbed()
+      .setColor("RED")
+      .setTitle("__¿Cómo hago una sugerencia?__")
+      .setDescription(`\n1- Primero que todo ve al correspondiente canal de sugerencias <#${suggest}>\n\n2- Utiliza el comando "${prefix}sugerencia" para colocar tu sugerencia\n\nListo, sugerencia enviada!`)
+      channel.send(embed)
+    }
+ }
   if(message.content.startsWith(prefix + 'encuesta')) {
     if (!message.member.hasPermission("ADMIN"))
       return message.channel.send(`**No tiene los permisos necesarios para utilizar este comando.**`);
@@ -193,21 +203,6 @@ if(message.content.startsWith(prefix + 'ip')) {
         .setDescription(`La IP del Servidor es la siguente\n IP: chicagorpmc.aternos.me`);
     message.channel.send({ embed: ip });
 }
-
-
-
-
-
-});
- /////////////////////////////////////////////////  ||  Embeds  ||  /////////////////////////////////////////////////
-
- client.on('message', message =>{
-  if (!message.content.startsWith(prefix)) return; 
-  if (message.author.bot) return;
-
-  const args = message.content.slice(prefix.length).trim().split(/ +/g);
-
-
 if(message.content.startsWith(prefix + 'avatar')) {
   const avatar = new Discord.MessageEmbed()
     .setTitle('¡Esta es tu foto de perfil!')
@@ -218,109 +213,85 @@ if(message.content.startsWith(prefix + 'avatar')) {
     .setTimestamp();
   message.channel.send({ embed: avatar});
 }
-});
+if (message.content.startsWith('+kick')) {
 
+  const user = message.mentions.users.first();
 
- /////////////////////////////////////////////////  || MiniJuegos ||   /////////////////////////////////////////////////
+  if (user) {
 
-client.on("message" , msg => {
+    const member = message.guild.member(user);
+
+    if (member) {
+
+      member
+        .kick('Optional reason that will display in the audit logs')
+        .then(() => {
+
+          message.reply(`Has kickeado con exito a ${user.tag}`);
+        })
+        .catch(err => {
+
+          message.reply('No pude patear al miembro');
+
+          console.error(err);
+        });
+    } else {
+
+      message.reply("Ese usuario no está en este servidor!");
+    }
+
+  } else {
+    message.reply("¡No mencionaste al usuario para kickear!");
+  }
+}
+
+if (message.content.startsWith('+ban')) {
+
+  const user = message.mentions.users.first();
+
+  if (user) {
+
+    const member = message.guild.member(user);
+
+    if (member) {
+      member
+        .ban({
+          reason: '¡Eran malos!',
+        })
+        .then(() => {
+
+          message.reply(`has baneado con éxito a  ${user.tag}`);
+        })
+        .catch(err => {
+
+          message.reply('No pude prohibir al miembro');
+
+          console.error(err);
+        });
+    } else {
+
+      message.reply("¡Ese usuario no está en este servidor!");
+    }
+  } else {
+
+    message.reply("¡No mencionaste al usuario para banear!");
+  }
+}
+if(message.content.startsWith(prefix + 'dado')){
   var Mensajes = ["1", "2", "3", "4", "5", "6"];
   var aleatorio = Math.floor(Math.random()*(Mensajes.length));
-  if(msg.content.startsWith(prefix + 'dado')){
-     msg.channel.send(Mensajes[aleatorio]);
-    }
+     message.channel.send(Mensajes[aleatorio]);
+}
+if(message.content.startsWith(prefix + 'pregunta')) {
+      var Mensajes = ["Si", "No", "Puede ser "];
+      var aleatorio = Math.floor(Math.random()*(Mensajes.length));
+         message.channel.send(Mensajes[aleatorio]);
+}
+
+
+
+
 });
-
-client.on("message" , msg => {
-  var Mensajes = ["Si", "No", "Puede ser "];
-  var aleatorio = Math.floor(Math.random()*(Mensajes.length));
-  if(msg.content.startsWith(prefix + 'pregunta')) {
-     msg.channel.send(Mensajes[aleatorio]);
-    }
-});
-
- /////////////////////////////////////////////////  || Sanciones ||  /////////////////////////////////////////////////
-
- /////////////////////////////////////////////////     || kick ||     /////////////////////////////////////////////////
-
-client.on('message', message => {
-
-  if (!message.guild) return;
-
-
-  if (message.content.startsWith('+kick')) {
-
-    const user = message.mentions.users.first();
-
-    if (user) {
-
-      const member = message.guild.member(user);
-
-      if (member) {
-
-        member
-          .kick('Optional reason that will display in the audit logs')
-          .then(() => {
-
-            message.reply(`Has kickeado con exito a ${user.tag}`);
-          })
-          .catch(err => {
-
-            message.reply('No pude patear al miembro');
-
-            console.error(err);
-          });
-      } else {
-
-        message.reply("Ese usuario no está en este servidor!");
-      }
-
-    } else {
-      message.reply("¡No mencionaste al usuario para kickear!");
-    }
-  }
-});
-
-/////////////////////////////////////////////////     || ban ||     /////////////////////////////////////////////////
-
-client.on('message', message => {
-
-  if (!message.guild) return;
-
-
-  if (message.content.startsWith('+ban')) {
-
-    const user = message.mentions.users.first();
-
-    if (user) {
-
-      const member = message.guild.member(user);
-
-      if (member) {
-        member
-          .ban({
-            reason: '¡Eran malos!',
-          })
-          .then(() => {
-
-            message.reply(`has baneado con éxito a  ${user.tag}`);
-          })
-          .catch(err => {
-
-            message.reply('No pude prohibir al miembro');
-
-            console.error(err);
-          });
-      } else {
-
-        message.reply("¡Ese usuario no está en este servidor!");
-      }
-    } else {
-
-      message.reply("¡No mencionaste al usuario para banear!");
-    }
-  }
-});
-
+ 
 
 client.login(config.token);
